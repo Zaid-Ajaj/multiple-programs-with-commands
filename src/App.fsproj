@@ -3,6 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Extensions.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Counter.fs" />
     <Compile Include="InputText.fs" />

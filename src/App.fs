@@ -2,12 +2,12 @@
 module App
 
 open Feliz
+open Elmish
 
 [<RequireQualifiedAccess>]
 type Page =
   | Counter
   | TextInput
-
 
 type State =
   { Counter: Counter.State
@@ -20,22 +20,33 @@ type Msg =
   | SwitchPage of Page
 
 let init() =
- { Counter = Counter.init()
-   InputText = InputText.init()
-   CurrentPage = Page.Counter }
+  let counterState, counterCmd = Counter.init()
+  let inputTextState, inputTextCmd = InputText.init()
 
-let update (msg: Msg) (state: State): State =
+  let initialState =
+    { Counter = counterState
+      InputText = inputTextState
+      CurrentPage = Page.Counter }
+
+  let initialCmd = Cmd.batch [
+    Cmd.map CounterMsg counterCmd
+    Cmd.map InputTextMsg inputTextCmd
+  ]
+
+  initialState, initialCmd
+
+let update (msg: Msg) (state: State) =
   match msg with
   | CounterMsg counterMsg ->
-      let updatedCounter =  Counter.update counterMsg state.Counter
-      { state with Counter = updatedCounter }
+      let updatedCounter, counterCmd =  Counter.update counterMsg state.Counter
+      { state with Counter = updatedCounter }, Cmd.map CounterMsg counterCmd
 
   | InputTextMsg inputTextMsg ->
       let updatedInputText = InputText.update inputTextMsg state.InputText
-      { state with InputText = updatedInputText}
+      { state with InputText = updatedInputText}, Cmd.none
 
   | SwitchPage page ->
-      { state with CurrentPage = page }
+      { state with CurrentPage = page }, Cmd.none
 
 let render (state: State) (dispatch: Msg -> unit) =
   match state.CurrentPage with

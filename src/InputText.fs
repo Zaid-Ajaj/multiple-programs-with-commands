@@ -2,6 +2,7 @@
 module InputText
 
 open Feliz
+open Elmish
 
 type State =
   { InputText: string
@@ -13,7 +14,7 @@ type Msg =
 
 let init() =
   { InputText = ""
-    IsUpperCase = false }
+    IsUpperCase = false }, Cmd.none
 
 let update (inputTextMsg: Msg) (inputTextState: State) =
   match inputTextMsg with
