@@ -7,7 +7,7 @@ open Elmish
 [<RequireQualifiedAccess>]
 type Page =
   | Counter
-  | TextInput
+  | InputText
 
 type State =
   { Counter: Counter.State
@@ -42,8 +42,8 @@ let update (msg: Msg) (state: State) =
       { state with Counter = updatedCounter }, Cmd.map CounterMsg counterCmd
 
   | InputTextMsg inputTextMsg ->
-      let updatedInputText = InputText.update inputTextMsg state.InputText
-      { state with InputText = updatedInputText}, Cmd.none
+      let updatedInputText, inputTextCmd = InputText.update inputTextMsg state.InputText
+      { state with InputText = updatedInputText}, Cmd.map InputTextMsg inputTextCmd
 
   | SwitchPage page ->
       { state with CurrentPage = page }, Cmd.none
@@ -54,14 +54,14 @@ let render (state: State) (dispatch: Msg -> unit) =
       Html.div [
         Html.button [
           prop.text "Show Text Input"
-          prop.onClick (fun _ -> dispatch (SwitchPage Page.TextInput))
+          prop.onClick (fun _ -> dispatch (SwitchPage Page.InputText))
         ]
 
         Common.divider
         Counter.render state.Counter (CounterMsg >> dispatch)
       ]
 
-  | Page.TextInput ->
+  | Page.InputText ->
       Html.div [
         Html.button [
           prop.text "Show counter"

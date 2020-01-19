@@ -18,8 +18,8 @@ let init() =
 
 let update (inputTextMsg: Msg) (inputTextState: State) =
   match inputTextMsg with
-  | InputTextChanged text -> { inputTextState with InputText = text }
-  | UppercaseToggled upperCase -> { inputTextState with IsUpperCase = upperCase }
+  | InputTextChanged text -> { inputTextState with InputText = text }, Cmd.none
+  | UppercaseToggled upperCase -> { inputTextState with IsUpperCase = upperCase }, Cmd.none
 
 let render (state: State) (dispatch: Msg -> unit) =
   Html.div [
